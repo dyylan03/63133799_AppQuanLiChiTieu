@@ -15,24 +15,34 @@ import androidx.fragment.app.Fragment;
 
 public class HomeFragment extends Fragment {
 
-    private EditText editTextSalary;
-    private TextView textViewSavings, textViewDailySpending;
-    private Button buttonCalculate;
+    private EditText editTextLuong;
+    private TextView textViewTietKiem, textViewDailyChiTieu, textViewDanhGia;
+    private Button buttonTinhToan, buttonDanhGia;
+    private double dailySpending;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        editTextSalary = view.findViewById(R.id.editTextSalary);
-        textViewSavings = view.findViewById(R.id.textViewSavings);
-        textViewDailySpending = view.findViewById(R.id.textViewDailySpending);
-        buttonCalculate = view.findViewById(R.id.buttonCalculate);
+        editTextLuong = view.findViewById(R.id.editTextLuong);
+        textViewTietKiem = view.findViewById(R.id.textViewTietKiem);
+        textViewDailyChiTieu = view.findViewById(R.id.textViewChiTieu);
+        textViewDanhGia = view.findViewById(R.id.textViewDanhGia);
+        buttonTinhToan = view.findViewById(R.id.buttonTinhToan);
+        buttonDanhGia = view.findViewById(R.id.buttonDanhGia);
 
-        buttonCalculate.setOnClickListener(new View.OnClickListener() {
+        buttonTinhToan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 calculate();
+            }
+        });
+
+        buttonDanhGia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                evaluate();
             }
         });
 
@@ -40,7 +50,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void calculate() {
-        String salaryStr = editTextSalary.getText().toString();
+        String salaryStr = editTextLuong.getText().toString();
 
         if (salaryStr.isEmpty()) {
             Toast.makeText(getActivity(), "Hãy nhập mức lương", Toast.LENGTH_SHORT).show();
@@ -50,12 +60,30 @@ public class HomeFragment extends Fragment {
         try {
             double salary = Double.parseDouble(salaryStr);
             double savings = salary * 0.3;
-            double dailySpending = (salary * 0.7) / 30; // Giả định 30 ngày trong một tháng
+            dailySpending = (salary * 0.7) / 30; // Giả định 30 ngày trong một tháng
 
-            textViewSavings.setText(String.format("Tiền tiết kiệm: %.2f", savings));
-            textViewDailySpending.setText(String.format("Số tiền chi mỗi ngày: %.2f", dailySpending));
+            textViewTietKiem.setText(String.format("Tiền tiết kiệm: %.2f", savings));
+            textViewDailyChiTieu.setText(String.format("Số tiền chi mỗi ngày: %.2f", dailySpending));
         } catch (NumberFormatException e) {
             Toast.makeText(getActivity(), "Mức lương không hợp lệ", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void evaluate() {
+        if (dailySpending == 0) {
+            Toast.makeText(getActivity(), "Hãy tính toán trước khi nhận đánh giá", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String evaluation;
+        if (dailySpending < 100000) {
+            evaluation = "Mức lương của bạn thuộc mức lương part time, bạn nên chi tiêu thật kĩ lưỡng.";
+        } else if (dailySpending >= 100000 && dailySpending < 200000) {
+            evaluation = "Mức lương của bạn ổn định, có thể sống tạm ổn với mức lương này.";
+        } else {
+            evaluation = "Bạn đang có một công việc tốt, cuộc sống dư giả. Chúc bạn phát triển bản thân với công việc này!";
+        }
+
+        textViewDanhGia.setText(evaluation);
     }
 }

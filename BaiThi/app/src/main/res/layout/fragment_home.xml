@@ -7,7 +7,7 @@
     tools:context=".HomeFragment">
 
     <EditText
-        android:id="@+id/editTextSalary"
+        android:id="@+id/editTextLuong"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Hãy nhập mức lương"
@@ -15,39 +15,70 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/darker_gray"
+        android:backgroundTint="@android:color/black"
         android:layout_marginTop="16dp"
         android:padding="16dp"/>
 
     <Button
-        android:id="@+id/buttonCalculate"
+        android:id="@+id/buttonTinhToan"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@android:color/black"
         android:text="Tính toán"
-        app:layout_constraintTop_toBottomOf="@id/editTextSalary"
+        app:layout_constraintTop_toBottomOf="@id/editTextLuong"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"/>
 
     <TextView
-        android:id="@+id/textViewSavings"
+        android:id="@+id/textViewTietKiem"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Tiền tiết kiệm: "
-        app:layout_constraintTop_toBottomOf="@id/buttonCalculate"
+        android:text="Tiền tiết kiệm mỗi tháng: "
+        app:layout_constraintTop_toBottomOf="@id/buttonTinhToan"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@android:color/black"
+        android:backgroundTint="@android:color/black"
         android:layout_marginTop="16dp"
         android:padding="16dp"/>
 
     <TextView
-        android:id="@+id/textViewDailySpending"
+        android:id="@+id/textViewChiTieu"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Số tiền chi mỗi ngày: "
-        app:layout_constraintTop_toBottomOf="@id/textViewSavings"
+        app:layout_constraintTop_toBottomOf="@id/textViewTietKiem"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@android:color/black"
+        android:backgroundTint="@android:color/black"
         android:layout_marginTop="16dp"
         android:padding="16dp"/>
+    <Button
+        android:id="@+id/buttonDanhGia"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@android:color/black"
+        android:text="Nhận đánh giá"
+        app:layout_constraintTop_toBottomOf="@id/textViewChiTieu"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
 
+    <TextView
+        android:id="@+id/textViewDanhGia"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Đánh giá của bạn sẽ hiện ở đây."
+        app:layout_constraintTop_toBottomOf="@id/buttonDanhGia"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="16dp"
+        android:padding="16dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
