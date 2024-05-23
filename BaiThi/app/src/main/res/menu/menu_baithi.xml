@@ -7,15 +7,15 @@
         android:icon="@android:drawable/ic_dialog_dialer"
         android:title="Trang Chủ" />
     <item
-        android:id="@+id/ChucNang1"
+        android:id="@+id/nav_them"
         android:icon="@android:drawable/ic_input_add"
         android:title="Thêm" />
     <item
-        android:id="@+id/ChucNang2"
+        android:id="@+id/nav_danh_sach"
         android:icon="?attr/actionModeCopyDrawable"
         android:title="Danh Sách" />
     <item
-        android:id="@+id/ChucNang3"
+        android:id="@+id/nav_thong_ke"
         android:icon="?attr/actionModePasteDrawable"
         android:title="Thống Kê" />
 </menu>
