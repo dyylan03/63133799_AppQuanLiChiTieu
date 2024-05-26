@@ -10,12 +10,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
+
+    private ShareViewModel sharedViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        sharedViewModel = new ViewModelProvider(this).get(ShareViewModel.class);
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
         bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -44,14 +47,11 @@ public class MainActivity extends AppCompatActivity {
                 } else if (itemId == R.id.nav_thong_ke) {
                     selectedFragment = new ThongKeFragment();
                 }
-                if(selectedFragment != null){
+                if (selectedFragment != null) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_view, selectedFragment).commit();
                 }
                 return true;
             }
-
-
-
         });
     }
 }

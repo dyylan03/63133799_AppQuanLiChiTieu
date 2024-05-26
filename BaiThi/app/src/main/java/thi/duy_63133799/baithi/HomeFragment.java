@@ -12,18 +12,21 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 public class HomeFragment extends Fragment {
 
     private EditText editTextLuong;
     private TextView textViewTietKiem, textViewDailyChiTieu, textViewDanhGia;
     private Button buttonTinhToan, buttonDanhGia;
-    private double dailySpending;
+    private ShareViewModel sharedViewModel;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(ShareViewModel.class);
 
         editTextLuong = view.findViewById(R.id.editTextLuong);
         textViewTietKiem = view.findViewById(R.id.textViewTietKiem);
@@ -60,20 +63,21 @@ public class HomeFragment extends Fragment {
         try {
             double salary = Double.parseDouble(salaryStr);
             double savings = salary * 0.3;
-            dailySpending = (salary * 0.7) / 30; // Giả định 30 ngày trong một tháng
+            double dailySpending = (salary * 0.7) / 30;
 
             textViewTietKiem.setText(String.format("Tiền tiết kiệm: %.2f", savings));
             textViewDailyChiTieu.setText(String.format("Số tiền chi mỗi ngày: %.2f", dailySpending));
+
+            sharedViewModel.setLuong(salaryStr);
+
         } catch (NumberFormatException e) {
             Toast.makeText(getActivity(), "Mức lương không hợp lệ", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void evaluate() {
-        if (dailySpending == 0) {
-            Toast.makeText(getActivity(), "Hãy tính toán trước khi nhận đánh giá", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        String dailySpendingStr = textViewDailyChiTieu.getText().toString().split(": ")[1];
+        double dailySpending = Double.parseDouble(dailySpendingStr);
 
         String evaluation;
         if (dailySpending < 100000) {
