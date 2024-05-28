@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ public class DanhSachFragment extends Fragment {
 
     private LinearLayout linearLayoutContent;
     private TextView textViewLuong;
+    private Button buttonLamMoi;
     private ShareViewModel shareViewModel;
 
     @Nullable
@@ -29,6 +31,7 @@ public class DanhSachFragment extends Fragment {
 
         linearLayoutContent = view.findViewById(R.id.linearLayoutContent);
         textViewLuong = view.findViewById(R.id.textViewLuong);
+        buttonLamMoi = view.findViewById(R.id.buttonLamMoi);
 
         shareViewModel = new ViewModelProvider(requireActivity()).get(ShareViewModel.class);
 
@@ -43,6 +46,13 @@ public class DanhSachFragment extends Fragment {
             @Override
             public void onChanged(String luong) {
                 textViewLuong.setText("Phần lương: " + luong);
+            }
+        });
+
+        buttonLamMoi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearData();
             }
         });
 
@@ -65,5 +75,9 @@ public class DanhSachFragment extends Fragment {
             textViewChiTieu.setPadding(0, 0, 0, 16); // Khoảng cách giữa các mục
             linearLayoutContent.addView(textViewChiTieu);
         }
+    }
+
+    private void clearData() {
+        shareViewModel.clearData();
     }
 }

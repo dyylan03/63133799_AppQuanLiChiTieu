@@ -1,64 +1,115 @@
 package thi.duy_63133799.baithi;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ThongKeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 public class ThongKeFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private ShareViewModel shareViewModel;
+    private RecyclerView recyclerView;
+    private ChiTieuAdapter adapter;
+    private Calendar selectedDate; // Biến để lưu trữ ngày được chọn
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public ThongKeFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ChucNang3Fragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ThongKeFragment newInstance(String param1, String param2) {
-        ThongKeFragment fragment = new ThongKeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_thong_ke, container, false);
+
+        Button buttonChonNgay = view.findViewById(R.id.buttonChonNgay);
+        recyclerView = view.findViewById(R.id.recyclerViewThongKe);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        adapter = new ChiTieuAdapter();
+        recyclerView.setAdapter(adapter);
+
+        shareViewModel = new ViewModelProvider(requireActivity()).get(ShareViewModel.class);
+
+        buttonChonNgay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog();
+            }
+        });
+
+        shareViewModel.getChiTieuList().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+            @Override
+            public void onChanged(List<String> chiTieuList) {
+                // Kiểm tra nếu selectedDate không null thì chỉ hiển thị danh sách chi tiêu của ngày đó
+                if (selectedDate != null) {
+                    filterChiTieuListByDate(selectedDate, chiTieuList);
+                } else {
+                    // Nếu selectedDate là null, hiển thị toàn bộ danh sách chi tiêu
+                    updateChiTieuList(chiTieuList);
+                }
+            }
+        });
+
+        return view;
+    }
+
+    // Trong ThongKeFragment
+    private void showDatePickerDialog() {
+        Calendar calendar = Calendar.getInstance();
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                requireContext(),
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        Calendar newSelectedDate = Calendar.getInstance();
+                        newSelectedDate.set(year, month, dayOfMonth);
+                        // Kiểm tra xem ngày mới có khác với ngày được chọn trước đó không
+                        if (selectedDate == null || !selectedDate.equals(newSelectedDate)) {
+                            selectedDate = newSelectedDate;
+                            recyclerView.setVisibility(View.VISIBLE);
+                            // Cập nhật lại danh sách chi tiêu sau khi chọn ngày mới
+                            shareViewModel.filterChiTieuListByDate(dayOfMonth, month + 1, year);
+                        }
+                    }
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+        );
+        datePickerDialog.show();
+    }
+
+
+
+    private void filterChiTieuListByDate(Calendar date, List<String> chiTieuList) {
+        List<String> filteredList = new ArrayList<>();
+        for (String chiTieu : chiTieuList) {
+            // Phân tích chi tiêu để lấy ngày tháng năm
+            String[] parts = chiTieu.split(" ");
+            String[] ngayThangNam = parts[0].split("-");
+            int year = Integer.parseInt(ngayThangNam[2]);
+            int month = Integer.parseInt(ngayThangNam[1]) - 1; // Calendar.MONTH là zero-based
+            int day = Integer.parseInt(ngayThangNam[0]);
+            // Kiểm tra nếu ngày của chi tiêu trùng với ngày được chọn thì thêm vào danh sách lọc
+            if (date.get(Calendar.YEAR) == year && date.get(Calendar.MONTH) == month && date.get(Calendar.DAY_OF_MONTH) == day) {
+                filteredList.add(chiTieu);
+            }
         }
+        updateChiTieuList(filteredList);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_thong_ke, container, false);
+    private void updateChiTieuList(List<String> chiTieuList) {
+        adapter.setChiTieuList(chiTieuList);
     }
 }

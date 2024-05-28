@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class ShareViewModel extends ViewModel {
@@ -34,5 +35,30 @@ public class ShareViewModel extends ViewModel {
         }
         chiTieuList.add(chiTieu);
         chiTieuListLiveData.setValue(chiTieuList);
+    }
+
+    public void clearData() {
+        luong.setValue("");
+        chiTieuListLiveData.setValue(new ArrayList<>());
+    }
+
+    public void filterChiTieuListByDate(int dayOfMonth, int month, int year) {
+        List<String> chiTieuList = chiTieuListLiveData.getValue();
+        if (chiTieuList != null) {
+            List<String> filteredList = new ArrayList<>();
+            for (String chiTieu : chiTieuList) {
+                // Phân tích chi tiêu để lấy ngày tháng năm
+                String[] parts = chiTieu.split(" ");
+                String[] ngayThangNam = parts[0].split("-");
+                int chiTieuDay = Integer.parseInt(ngayThangNam[0]);
+                int chiTieuMonth = Integer.parseInt(ngayThangNam[1]);
+                int chiTieuYear = Integer.parseInt(ngayThangNam[2]);
+                // Kiểm tra nếu ngày của chi tiêu trùng với ngày được chọn thì thêm vào danh sách lọc
+                if (dayOfMonth == chiTieuDay && month == chiTieuMonth && year == chiTieuYear) {
+                    filteredList.add(chiTieu);
+                }
+            }
+            chiTieuListLiveData.setValue(filteredList);
+        }
     }
 }
