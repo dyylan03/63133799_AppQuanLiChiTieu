@@ -30,7 +30,6 @@ public class DanhSachFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_danh_sach, container, false);
 
         linearLayoutContent = view.findViewById(R.id.linearLayoutContent);
-        textViewLuong = view.findViewById(R.id.textViewLuong);
         buttonLamMoi = view.findViewById(R.id.buttonLamMoi);
 
         shareViewModel = new ViewModelProvider(requireActivity()).get(ShareViewModel.class);
@@ -42,12 +41,7 @@ public class DanhSachFragment extends Fragment {
             }
         });
 
-        shareViewModel.getLuong().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String luong) {
-                textViewLuong.setText("Phần lương: " + luong);
-            }
-        });
+
 
         buttonLamMoi.setOnClickListener(new View.OnClickListener() {
             @Override

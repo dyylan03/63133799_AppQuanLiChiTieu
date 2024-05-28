@@ -21,7 +21,7 @@ import java.util.Calendar;
 public class ThemFragment extends Fragment {
 
     private EditText editTextLiDoChiTieu, editTextSoTienChiTieu;
-    private Button buttonThemChiTieu, buttonChonNgay; // Thêm buttonChonNgay vào đây
+    private Button buttonThemChiTieu, buttonChonNgay;
     private ShareViewModel shareViewModel;
     private String liDoChiTieu, soTienChiTieu;
 
@@ -33,19 +33,15 @@ public class ThemFragment extends Fragment {
         editTextLiDoChiTieu = view.findViewById(R.id.editTextLiDoChiTieu);
         editTextSoTienChiTieu = view.findViewById(R.id.editTextSoTienChiTieu);
         buttonThemChiTieu = view.findViewById(R.id.buttonThemChiTieu);
-        buttonChonNgay = view.findViewById(R.id.buttonChonNgay); // Ánh xạ buttonChonNgay
+        buttonChonNgay = view.findViewById(R.id.buttonChonNgay);
 
         shareViewModel = new ViewModelProvider(requireActivity()).get(ShareViewModel.class);
 
-        // Sự kiện click cho buttonChonNgay
         buttonChonNgay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Lưu trữ dữ liệu của lý do chi tiêu và giá tiền
                 liDoChiTieu = editTextLiDoChiTieu.getText().toString().trim();
                 soTienChiTieu = editTextSoTienChiTieu.getText().toString().trim();
-
-                // Gọi phương thức showDatePickerDialog()
                 showDatePickerDialog();
             }
         });
@@ -53,11 +49,7 @@ public class ThemFragment extends Fragment {
         buttonThemChiTieu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Nếu muốn thêm ngày vào khi thêm khoản chi tiêu, bạn có thể gọi showDatePickerDialog() ở đây
-                // liDoChiTieu = editTextLiDoChiTieu.getText().toString().trim();
-                // soTienChiTieu = editTextSoTienChiTieu.getText().toString().trim();
-
-                // showDatePickerDialog();
+                Toast.makeText(requireContext(), "Vui lòng chọn ngày trước khi thêm chi tiêu", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -75,19 +67,10 @@ public class ThemFragment extends Fragment {
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-                        int minute = calendar.get(Calendar.MINUTE);
-
-                        // Tạo đối tượng Calendar với ngày và thời gian đã chọn
-                        calendar.set(year, month, dayOfMonth, hour, minute);
-
-                        // Format thời gian
-                        String thoiGian = DateFormat.format("dd-MM-yyyy HH:mm:ss", calendar.getTime()).toString();
-
-                        // Tạo chuỗi thông tin chi tiêu sử dụng dữ liệu đã lưu trữ
+                        calendar.set(year, month, dayOfMonth);
+                        String thoiGian = DateFormat.format("dd-MM-yyyy", calendar.getTime()).toString();
                         String chiTieu = thoiGian + " - " + liDoChiTieu + ": " + soTienChiTieu;
                         shareViewModel.addChiTieu(chiTieu);
-
                         Toast.makeText(requireContext(), "Thêm khoản chi tiêu thành công", Toast.LENGTH_SHORT).show();
                     }
                 },

@@ -68,7 +68,7 @@ public class HomeFragment extends Fragment {
             textViewTietKiem.setText(String.format("Tiền tiết kiệm: %.2f", savings));
             textViewDailyChiTieu.setText(String.format("Số tiền chi mỗi ngày: %.2f", dailySpending));
 
-            sharedViewModel.setLuong(salaryStr);
+
 
         } catch (NumberFormatException e) {
             Toast.makeText(getActivity(), "Mức lương không hợp lệ", Toast.LENGTH_SHORT).show();
